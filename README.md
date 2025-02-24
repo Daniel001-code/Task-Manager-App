@@ -1,16 +1,31 @@
 # notification_app
 
-A new Flutter project.
+This is a task management application that send reminder to the user 5 minutes to the user after creating a task.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+The Application can be run on any pc with a code editor such as vs code or android studio.
 
-A few resources to get you started if this is your first Flutter project:
+The main file is in the lib folder
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The other UI screens can be found in the ui folder
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+I will also send the apk build for quick access
+
+## Local data storage
+
+SQLite was used for local data storage and management
+
+## State Management system
+
+GetX was used for state management with key implimentation in the controller folder
+
+## App architecture
+
+The app follows the structure shown bellow
+- controller
+- model
+- helper
+- services
+- ui
+
