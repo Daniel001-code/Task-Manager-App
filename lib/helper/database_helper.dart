@@ -26,12 +26,14 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
+    const boolType = 'BOOLEAN NOT NULL';
     await db.execute('''
       CREATE TABLE tasks (
         id $idType,
         title $textType,
         description $textType,
-        createdTime $textType
+        createdTime $textType,
+        isCompleted $boolType DEFAULT 0
       )
     ''');
   }
@@ -48,6 +50,12 @@ class DatabaseHelper {
   }
 
   Future<int> updateTask(Task task) async {
+    final db = await instance.database;
+    return await db
+        .update('tasks', task.toMap(), where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<int> checkCompleted(Task task) async {
     final db = await instance.database;
     return await db
         .update('tasks', task.toMap(), where: 'id = ?', whereArgs: [task.id]);

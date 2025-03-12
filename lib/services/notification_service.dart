@@ -74,9 +74,9 @@ class NotiService {
   Future<void> showNotification(Task task) async {
     // Schedule notification 10 seconds after task creation
     final tz.TZDateTime scheduledTime =
-        tz.TZDateTime.now(tz.local).add(const Duration(minutes: 5));
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5));
     debugPrint('Notification scheduled for: $scheduledTime');
-    return Future.delayed(const Duration(minutes: 5), () {
+    return Future.delayed(const Duration(seconds: 5), () {
       notificationPlugin
           // .zonedSchedule(
           //     task.id!,
@@ -90,7 +90,7 @@ class NotiService {
           .show(
         task.id!,
         'Task Reminder',
-        'Reminder for task: ${task.title}',
+        'Reminder. Task created for: ${task.title}',
         notificationDetails(),
       );
     });

@@ -7,11 +7,15 @@ import 'package:intl/intl.dart';
 
 class TaskController extends GetxController {
   late Future<List<Task>> taskList;
+
   Future<void> addOrEditTask(
       {Task? task, required BuildContext context}) async {
     final titleController = TextEditingController(text: task?.title);
+
     final descriptionController =
         TextEditingController(text: task?.description);
+
+    final completed = task?.isCompleted;
 
     await showDialog(
       context: context,
@@ -37,8 +41,9 @@ class TaskController extends GetxController {
           ),
           ElevatedButton(
             onPressed: () async {
-              final title = titleController.text;
-              final description = descriptionController.text;
+              final title = titleController.text.trim();
+              final description = descriptionController.text.trim();
+              final isCompleted = completed ?? false;
               if (title.isNotEmpty && description.isNotEmpty) {
                 if (task == null) {
                   // Create a new task
@@ -46,10 +51,12 @@ class TaskController extends GetxController {
                     title: title,
                     description: description,
                     createdTime: DateTime.now(),
+                    isCompleted: isCompleted,
                   );
                   int id = await DatabaseHelper.instance.createTask(newTask);
                   final insertedTask = newTask.copyWith(id: id);
                   refreshTaskList();
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
                   await NotiService().showNotification(insertedTask);
                 } else {
@@ -59,10 +66,12 @@ class TaskController extends GetxController {
                     title: title,
                     description: description,
                     createdTime: task.createdTime,
+                    isCompleted: task.isCompleted,
                   );
-                  refreshTaskList();
-                  Navigator.of(context).pop();
                   await DatabaseHelper.instance.updateTask(updatedTask);
+                  refreshTaskList();
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
                 }
               }
             },
@@ -76,6 +85,48 @@ class TaskController extends GetxController {
   void deleteTask(int id) async {
     await DatabaseHelper.instance.deleteTask(id);
     refreshTaskList();
+  }
+
+  void setCompleted({Task? task, required BuildContext context}) async {
+    final titleController = TextEditingController(text: task?.title);
+
+    final descriptionController =
+        TextEditingController(text: task?.description);
+
+    // set task as completed
+
+    if (task != null) {
+      final updatedTask = Task(
+          id: task.id,
+          title: titleController.text.trim(),
+          description: descriptionController.text.trim(),
+          createdTime: task.createdTime,
+          isCompleted: true);
+
+      await DatabaseHelper.instance.updateTask(updatedTask);
+      refreshTaskList();
+    }
+  }
+
+  void undo({Task? task, required BuildContext context}) async {
+    final titleController = TextEditingController(text: task?.title);
+
+    final descriptionController =
+        TextEditingController(text: task?.description);
+
+    // undo action
+
+    if (task != null) {
+      final undoTask = Task(
+          id: task.id,
+          title: titleController.text.trim(),
+          description: descriptionController.text.trim(),
+          createdTime: task.createdTime,
+          isCompleted: task.isCompleted);
+
+      await DatabaseHelper.instance.createTask(undoTask);
+      refreshTaskList();
+    }
   }
 
   void refreshTaskList() {
