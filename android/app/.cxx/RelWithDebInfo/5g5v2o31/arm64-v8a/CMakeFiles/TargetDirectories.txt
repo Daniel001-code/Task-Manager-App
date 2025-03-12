@@ -1,0 +1,2 @@
+C:/Users/user/Desktop/assessment app/Task-Manager-App/android/app/.cxx/RelWithDebInfo/5g5v2o31/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/user/Desktop/assessment app/Task-Manager-App/android/app/.cxx/RelWithDebInfo/5g5v2o31/arm64-v8a/CMakeFiles/rebuild_cache.dir
